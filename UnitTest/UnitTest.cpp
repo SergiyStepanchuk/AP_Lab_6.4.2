@@ -14,9 +14,6 @@ namespace UnitTest
 		{
 			double mass[10] = { 9, 8, 7, 6, 5, 4 ,3 ,2, 1, 0 };
 			Assert::AreEqual(sum_dod(mass, 10), 45.);
-			sort_half(mass, 10);
-			Assert::AreEqual(mass[0], 1.);
-			Assert::AreEqual(mass[1], 0.);
 		}
 	};
 }
