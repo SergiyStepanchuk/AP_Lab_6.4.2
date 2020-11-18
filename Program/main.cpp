@@ -40,24 +40,36 @@ void draw_mass(const T* mass, const int& size, const int& c_space) {
 	draw_line(size * c_space + 2);
 }
 
-double sum_dod(double* mass,const int &size) {
-	return size > 1 ? 
-		(mass[size-1] > 0 ? mass[size-1] : 0) + sum_dod(mass, size - 1) : 
-		mass[size-1] > 0 ? mass[size-1] : 0;
+double sum_dod(double* mass, const int& size) {
+	return size > 1 ?
+		(mass[size - 1] > 0 ? mass[size - 1] : 0) + sum_dod(mass, size - 1) :
+		mass[size - 1] > 0 ? mass[size - 1] : 0;
 }
 
-void sort_half_(double* mass, const int &max,const int &j = 0) {
+int min_(double* mass, int size) {
+	if (--size > 0) {
+		int b = min_(mass, size);
+		return mass[size] < mass[b] ? size : b;
+	}
+	else return 0;
+}
+
+double sum(double* mass, const int& size) {
+	return size > 1 ? mass[size - 1] + sum_dod(mass, size - 1) : mass[size - 1];
+}
+
+void sort_half_(double* mass, const int& max, const int& j = 0) {
 	if (j < max - 1 && mass[j] > mass[j + 2])
 		swap(mass[j], mass[j + 2]);
 
 	if (j > 0 && mass[j - 1] > mass[j + 1])
 		swap(mass[j - 1], mass[j + 1]);
 
-	if (j+2 < max)
+	if (j + 2 < max)
 		sort_half_(mass, max, j + 2);
 }
 
-void sort_half(double* mass, const int &size, const int &i = 0) {
+void sort_half(double* mass, const int& size, const int& i = 0) {
 	if (i < size - 1) {
 		sort_half_(mass, size - i - 1);
 		sort_half(mass, size, i + 2);
@@ -77,12 +89,18 @@ void main() {
 
 	double* mass = new double[n];
 	full_mass<double>(mass, n, dia);
-	draw_mass<double>(mass, n, c_space);
-	sort_half(mass, n);
-	draw_mass<double>(mass, n, c_space);
+	draw_mass(mass, n, c_space);
+
 	cout.precision(10);
 
-	cout << "sum dod: " << sum_dod(mass, n) << endl;
+	cout << "1.1 sum dod: " << sum_dod(mass, n) << endl;
+	cout << "1.2 min index: " << min_(mass, n) << endl;
+	cout << "1.2 sum to min: " << sum(mass, min_(mass, n)) << endl;
+	cout << "2. sort_half" << endl;
+	cout.precision(2);
+	sort_half(mass, n);
+	draw_mass(mass, n, c_space);
 
 	delete[] mass;
+
 }
